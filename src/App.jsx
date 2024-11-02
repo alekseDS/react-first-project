@@ -9,11 +9,16 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
 function App() {
+  const [isLoginForm, setIsLoginForm] = useState(true)
   const [data, setData] = useState('')
   const [pass, setPass] = useState('')
 
   const handleLogin = ()=>{
-    setData(Date.now())
+    setIsLoginForm(true)
+  }
+
+  const handleRegister = ()=>{
+    setIsLoginForm(false)
   }
 
   const handleChangeLogin = (e)=>{
@@ -26,14 +31,33 @@ function App() {
 
   return (
       <Stack alignItems={"center"}>
-        <Stack width={"350px"} gap={2}>
+        {
+        isLoginForm 
+        ? <Stack width={"350px"} gap={2}>  
           <Typography variant="h3" gutterBottom>
-            Вход в сервис {data}
+            Вход в сервис
           </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Нет учетной записи?
+          </Typography>
+          <Button variant="text" onClick={handleRegister}>Зарегестрироваться</Button>
           <TextField id="login" label="Login" variant="standard" onChange={handleChangeLogin} value={data} />
           <TextField id="password" label="Password" variant="standard" type="password" onChange={handleChangePass} value={pass} />
-          <Button variant="contained" onClick={handleLogin}>Войти</Button>
+          <Button variant="contained" >Войти</Button>
         </Stack>
+        : <Stack width={"350px"} gap={2}>  
+          <Typography variant="h3" gutterBottom>
+            Регстрация в сервисе
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Есть учетка?
+          </Typography>
+          <Button variant="text" onClick={handleLogin}>Войти</Button>
+          <TextField id="login" label="Login" variant="standard" onChange={handleChangeLogin} value={data} />
+          <TextField id="password" label="Password" variant="standard" type="password" onChange={handleChangePass} value={pass} />
+          <Button variant="contained" >Регстрация</Button>
+        </Stack>
+        }
       </Stack>
   )
 }
