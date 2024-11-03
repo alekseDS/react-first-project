@@ -1,61 +1,139 @@
 import Typography from '@mui/material/Typography';
 import TodoItem from './TodoItem';
-import { useState } from 'react';
-import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
 import AddTodo from './AddTodo';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+import { CircularProgress } from '@mui/material';
 
-const todo = {
-    _id: "123adas123dasd",
-    title: "Подстричься",
-    description: "Сходить в парикмахерскую",
-    isDone: true,
-}
 
 function Homepage(props){
-    const [todos, setTodos] =useState([todo])
+    const [todos, setTodos] =useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const { enqueueSnackbar } = useSnackbar()
 
-    const handleAddTodo = (title, description)=>{
-        const newTodo = {
-            _id: Date.now().toString(),
-            title,
-            description,
-            isDone: false,
+    const getTodos = async ()=>{
+        try {
+            setIsLoading(true)
+            const response = await axios.get('https://todos-be.vercel.app/todos',{
+                headers: {
+                    "Authorization": `Bearer ${props.user.access_token}`
+                }
+            })
+            setTodos(response.data)
+        } catch (e) {
+            enqueueSnackbar(e.response?.data?.message || "ошибка сервера", {
+                variant: 'error'
+            })
+        } finally {
+            setIsLoading(false)
         }
-        setTodos([newTodo, ...todos])
     }
 
-    const handleDeleteTodo = (_id)=>{
-        setTodos(todos.filter((item)=>{return item._id !== _id}))
+    const handleAddTodo = async (title, description)=>{
+        try {
+            setIsLoading(true)
+            const response = await axios.post('https://todos-be.vercel.app/todos',{
+               title,
+               description  
+            },{
+                headers: {
+                    "Authorization": `Bearer ${props.user.access_token}`
+                }
+            })
+            await getTodos()
+        } catch (e) {
+            enqueueSnackbar(e.response?.data?.message || "ошибка сервера", {
+                variant: 'error'
+            })
+        } finally {
+            setIsLoading(false)
+        }
     }
 
-    const handleDoneTodo = (_id)=>{
-        setTodos(todos.map((item)=>{
-            return item._id === _id 
-                ? {...item, isDone: !item.isDone}
-                : item 
-        }))
+    const handleDeleteTodo = async (_id)=>{
+        try {
+            setIsLoading(true)
+            const response = await axios.delete('https://todos-be.vercel.app/todos/'+_id,{
+                headers: {
+                    "Authorization": `Bearer ${props.user.access_token}`
+                }
+            })
+            await getTodos()
+        } catch (e) {
+            enqueueSnackbar(e.response?.data?.message || "ошибка сервера", {
+                variant: 'error'
+            })
+        } finally {
+            setIsLoading(false)
+        }
     }
 
-    const handleUpdateTodo = (_id, title, description)=>{
-        setTodos(todos.map((item)=>{
-            return item._id === _id 
-                ? {...item, title, description}
-                : item 
-        }))
+    const handleDoneTodo = async (_id)=>{
+        try {
+            setIsLoading(true)
+            const response = await axios.patch('https://todos-be.vercel.app/todos/'+_id,{
+                completed: !todos.find(item=>item._id ===_id).completed
+            },{
+                headers: {
+                    "Authorization": `Bearer ${props.user.access_token}`
+                }
+            })
+            await getTodos()
+        } catch (e) {
+            enqueueSnackbar(e.response?.data?.message || "ошибка сервера", {
+                variant: 'error'
+            })
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const handleUpdateTodo = async (_id, title, description)=>{
+        try {
+            setIsLoading(true)
+            const response = await axios.patch('https://todos-be.vercel.app/todos/'+_id,{
+                title,
+                description,
+            },{
+                headers: {
+                    "Authorization": `Bearer ${props.user.access_token}`
+                }
+            })
+            await getTodos()
+        } catch (e) {
+            enqueueSnackbar(e.response?.data?.message || "ошибка сервера", {
+                variant: 'error'
+            })
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(()=>{
+        if(props.user.access_token){
+            getTodos()
+        }
+    },[props.user.access_token])
+
+    if(isLoading){
+        return <CircularProgress/>
     }
 
     return (
         <div>
-            <Typography>{props.username}</Typography>
-            <AddTodo addTodo={handleAddTodo}/>
+            <Typography>{props.user.username}</Typography>
+            <AddTodo addTodo={handleAddTodo} isLoading={isLoading}/>
             {todos.map((item)=>{
-                return <TodoItem 
-                todo={item}
-                 key={item._id}
-                  handleDeleteTodo={handleDeleteTodo}
-                  handleDoneTodo={handleDoneTodo}
-                  handleUpdateTodo={handleUpdateTodo}
-                   />
+                return (
+                <TodoItem 
+                    todo={item}
+                    key={item._id}
+                    handleDeleteTodo={handleDeleteTodo}
+                    handleDoneTodo={handleDoneTodo}
+                    handleUpdateTodo={handleUpdateTodo}
+                    isLoading={isLoading}
+                />)
             })}
         </div>
     )

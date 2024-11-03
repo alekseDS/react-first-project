@@ -14,7 +14,7 @@ function App() {
       <Stack alignItems={"center"}>
         {
           user
-            ? <Homepage username={user.name} />
+            ? <Homepage user={user} />
             : <SignUpForm setUser={setUser}/>
         }
       </Stack>
