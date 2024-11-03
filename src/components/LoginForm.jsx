@@ -19,6 +19,14 @@ function LoginForm(props) {
   const handleChangePass = (e)=>{
     setPass(e.target.value)
   }
+
+  const handleLoginClick = ()=>{
+    if(data === 'admin' && pass === '123'){
+        props.setUser({name: data})
+    } else {
+        console.error('Unknow user')
+    }
+  }
   
 
   return (
@@ -32,7 +40,7 @@ function LoginForm(props) {
           <Button variant="text" onClick={props.handleRegister}>Зарегестрироваться</Button>
           <TextField id="login" label="Login" variant="standard" onChange={handleChangeLogin} value={data} />
           <TextField id="password" label="Password" variant="standard" type="password" onChange={handleChangePass} value={pass} />
-          <Button variant="contained" >Войти</Button>
+          <Button onClick={handleLoginClick} variant="contained" >Войти</Button>
         </Stack>
   )
 }
