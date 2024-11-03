@@ -5,6 +5,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Stack from '@mui/material/Stack';
 import SignUpForm from './components/SignUpForm';
+import Homepage from './components/Home/Homepage';
 
 function App() {
   const [user, setUser] = useState()
@@ -13,7 +14,7 @@ function App() {
       <Stack alignItems={"center"}>
         {
           user
-            ? <div>{user.name}</div>
+            ? <Homepage username={user.name} />
             : <SignUpForm setUser={setUser}/>
         }
       </Stack>
