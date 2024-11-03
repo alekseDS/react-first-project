@@ -39,7 +39,7 @@ function RegisterForm(props) {
             })
   
             if(response.status === 200 && response.data.username){
-              props.setUser({name: response.data.username})
+              props.setUser(response.data)
               enqueueSnackbar("Добро пожаловать, "+response.data.username, {
                   variant: "success"
               })

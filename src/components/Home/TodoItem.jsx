@@ -37,17 +37,29 @@ function TodoItem(props) {
 
 
   return (
-    <Card sx={{ minWidth: 275, backgroundColor: todo.isDone ? '#fff010' : undefined }}>
+    <Card sx={{ minWidth: 275, backgroundColor: todo.completed ? '#fff010' : undefined }}>
       <CardContent>
         <Stack>
             {isEdit 
-                ? <TextField size='small' label='Заголовок' value={title} onChange={handChangeTitle} />
+                ? <TextField 
+                size='small' 
+                label='Заголовок' 
+                value={title} 
+                onChange={handChangeTitle} 
+                disabled={props.isLoading}
+                />
                 : <Typography gutterBottom>
                 {todo.title}
                 </Typography>
             }
             {isEdit 
-                ? <TextField size='small' label='Описание' value={description} onChange={handChangeDesc}/>
+                ? <TextField 
+                size='small' 
+                label='Описание' 
+                value={description} 
+                onChange={handChangeDesc}
+                disabled={props.isLoading}
+                />
                 : <Typography variant="body2">
                 {todo.description}
                 </Typography>
@@ -55,11 +67,22 @@ function TodoItem(props) {
         </Stack>  
       </CardContent>
       <CardActions>
-        <Checkbox checked={todo.isDone} onChange={handleDoneTodo}/>
-        <Button size="small" onClick={toggleIsEdit}>
+        <Checkbox checked={todo.completed} onChange={handleDoneTodo}/>
+        <Button 
+        size="small"
+        onClick={toggleIsEdit}
+        disabled={props.isLoading}
+        >
             {isEdit ? "Сохранить" : "Редактировать"}
             </Button>
-        <Button size="small" sx={{backgroundColor: 'red', color:'white'}} onClick={handleDeleteTodo}>Удалить</Button>
+        <Button 
+        size="small" 
+        sx={{backgroundColor: 'red', color:'white'}} 
+        onClick={handleDeleteTodo}
+        disabled={props.isLoading}
+        >
+          Удалить
+        </Button>
       </CardActions>
     </Card>
   )

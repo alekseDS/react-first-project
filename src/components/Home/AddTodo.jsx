@@ -30,7 +30,7 @@ function AddTodo(props) {
     }
 
   return (
-    <Accordion>
+    <Accordion disabled={props.isLoading}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
         >
