@@ -7,8 +7,17 @@ import { Checkbox } from '@mui/material';
 
 function TodoItem(props) {
     const todo = props.todo
+    const handleDeleteTodo = ()=>{
+         props.handleDeleteTodo(todo._id)
+    }
+
+    const handleDoneTodo = ()=>{
+        props.handleDoneTodo(todo._id)
+    }
+
+
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{ minWidth: 275, backgroundColor: todo.isDone ? '#fff010' : undefined }}>
       <CardContent>
         <Typography gutterBottom>
           {todo.titile}
@@ -18,9 +27,9 @@ function TodoItem(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Checkbox checked={todo.isDone}/>
+        <Checkbox checked={todo.isDone} onChange={handleDoneTodo}/>
         <Button size="small">Редактировать</Button>
-        <Button size="small" sx={{backgroundColor: 'red', color:'white'}}>Удалить</Button>
+        <Button size="small" sx={{backgroundColor: 'red', color:'white'}} onClick={handleDeleteTodo}>Удалить</Button>
       </CardActions>
     </Card>
   )
