@@ -24,12 +24,29 @@ function Homepage(props){
         setTodos([newTodo, ...todos])
     }
 
+    const handleDeleteTodo = (_id)=>{
+        setTodos(todos.filter((item)=>{return item._id !== _id}))
+    }
+
+    const handleDoneTodo = (_id)=>{
+        setTodos(todos.map((item)=>{
+            return item._id === _id 
+                ? {...item, isDone: !item.isDone}
+                : item 
+        }))
+    }
+
     return (
         <div>
             <Typography>{props.username}</Typography>
             <AddTodo addTodo={handleAddTodo}/>
             {todos.map((item)=>{
-                return <TodoItem todo={item} key={item._id} />
+                return <TodoItem 
+                todo={item}
+                 key={item._id}
+                  handleDeleteTodo={handleDeleteTodo}
+                  handleDoneTodo={handleDoneTodo}
+                   />
             })}
         </div>
     )
