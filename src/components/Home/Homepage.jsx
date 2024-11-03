@@ -6,7 +6,7 @@ import AddTodo from './AddTodo';
 
 const todo = {
     _id: "123adas123dasd",
-    titile: "Подстричься",
+    title: "Подстричься",
     description: "Сходить в парикмахерскую",
     isDone: true,
 }
@@ -14,10 +14,10 @@ const todo = {
 function Homepage(props){
     const [todos, setTodos] =useState([todo])
 
-    const handleAddTodo = (titile, description)=>{
+    const handleAddTodo = (title, description)=>{
         const newTodo = {
             _id: Date.now().toString(),
-            titile,
+            title,
             description,
             isDone: false,
         }
@@ -36,6 +36,14 @@ function Homepage(props){
         }))
     }
 
+    const handleUpdateTodo = (_id, title, description)=>{
+        setTodos(todos.map((item)=>{
+            return item._id === _id 
+                ? {...item, title, description}
+                : item 
+        }))
+    }
+
     return (
         <div>
             <Typography>{props.username}</Typography>
@@ -46,6 +54,7 @@ function Homepage(props){
                  key={item._id}
                   handleDeleteTodo={handleDeleteTodo}
                   handleDoneTodo={handleDoneTodo}
+                  handleUpdateTodo={handleUpdateTodo}
                    />
             })}
         </div>

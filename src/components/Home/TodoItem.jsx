@@ -3,10 +3,30 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Checkbox } from '@mui/material';
+import { Checkbox, Stack, TextField } from '@mui/material';
+import { useState } from 'react';
 
 function TodoItem(props) {
     const todo = props.todo
+    const [isEdit, setIsEdit] = useState(false)
+    const [title, setTitle] = useState(todo.title || '')
+    const [description, setDesc] = useState(todo.description || '')
+
+    const toggleIsEdit = ()=>{
+        setIsEdit(!isEdit)
+        if(isEdit){
+            props.handleUpdateTodo(todo._id, title, description)
+        }
+    }
+
+    const handChangeTitle = (e)=>{
+        setTitle(e.target.value)
+    }
+
+    const handChangeDesc = (e)=>{
+        setDesc(e.target.value)
+    }
+
     const handleDeleteTodo = ()=>{
          props.handleDeleteTodo(todo._id)
     }
@@ -19,16 +39,26 @@ function TodoItem(props) {
   return (
     <Card sx={{ minWidth: 275, backgroundColor: todo.isDone ? '#fff010' : undefined }}>
       <CardContent>
-        <Typography gutterBottom>
-          {todo.titile}
-        </Typography>
-        <Typography variant="body2">
-          {todo.description}
-        </Typography>
+        <Stack>
+            {isEdit 
+                ? <TextField size='small' label='Заголовок' value={title} onChange={handChangeTitle} />
+                : <Typography gutterBottom>
+                {todo.title}
+                </Typography>
+            }
+            {isEdit 
+                ? <TextField size='small' label='Описание' value={description} onChange={handChangeDesc}/>
+                : <Typography variant="body2">
+                {todo.description}
+                </Typography>
+            }     
+        </Stack>  
       </CardContent>
       <CardActions>
         <Checkbox checked={todo.isDone} onChange={handleDoneTodo}/>
-        <Button size="small">Редактировать</Button>
+        <Button size="small" onClick={toggleIsEdit}>
+            {isEdit ? "Сохранить" : "Редактировать"}
+            </Button>
         <Button size="small" sx={{backgroundColor: 'red', color:'white'}} onClick={handleDeleteTodo}>Удалить</Button>
       </CardActions>
     </Card>
