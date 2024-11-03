@@ -6,12 +6,14 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
 import { useSnackbar } from 'notistack'
 import { useState } from 'react';
 
 function LoginForm(props) {
   const [data, setData] = useState('')
   const [pass, setPass] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
   const handleChangeLogin = (e)=>{
@@ -22,16 +24,28 @@ function LoginForm(props) {
     setPass(e.target.value)
   }
 
-  const handleLoginClick = ()=>{
-    if(data === 'admin' && pass === '123'){
-        props.setUser({name: data})
-        enqueueSnackbar("Добро пожаловать, "+data, {
-            variant: "success"
-        })
-    } else {
+  const handleLoginClick = async ()=>{
+    try{
+        setIsLoading(true)
+        const response = await axios.post('https://todos-be.vercel.app/auth/login', {
+            "username": data,
+            "password": pass
+          })
+
+          if(response.status === 200 && response.data.username){
+            props.setUser({name: response.data.username})
+            enqueueSnackbar("Добро пожаловать, "+response.data.username, {
+                variant: "success"
+            })
+        } 
+    }
+    catch(e){
         enqueueSnackbar('Неверные данные или ошибка сервера', {
             variant: 'error'
         })
+    }
+    finally {
+        setIsLoading(false)
     }
   }
   
@@ -47,7 +61,7 @@ function LoginForm(props) {
           <Button variant="text" onClick={props.handleRegister}>Зарегестрироваться</Button>
           <TextField id="login" label="Login" variant="standard" onChange={handleChangeLogin} value={data} />
           <TextField id="password" label="Password" variant="standard" type="password" onChange={handleChangePass} value={pass} />
-          <Button onClick={handleLoginClick} variant="contained" >Войти</Button>
+          <Button disabled={isLoading || !data || !pass} onClick={handleLoginClick} variant="contained" >Войти</Button>
         </Stack>
   )
 }
