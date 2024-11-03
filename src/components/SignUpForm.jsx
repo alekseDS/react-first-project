@@ -21,7 +21,7 @@ function SignUpForm(props) {
   return (
         isLoginForm 
         ? <LoginForm setUser={props.setUser} handleRegister={handleRegister}/>
-        : <RegisterForm handleLogin={handleLogin}/>
+        : <RegisterForm setUser={props.setUser} handleLogin={handleLogin}/>
   )
 }
 
