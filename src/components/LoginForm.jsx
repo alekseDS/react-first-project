@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import { NavLink } from "react-router-dom";
 import { useSnackbar } from 'notistack'
 import { useState } from 'react';
 
@@ -57,8 +58,8 @@ function LoginForm(props) {
           </Typography>
           <Typography variant="subtitle1" gutterBottom>
             Нет учетной записи?
+            <NavLink to="/register">Зарегестрироваться</NavLink>
           </Typography>
-          <Button variant="text" onClick={props.handleRegister}>Зарегестрироваться</Button>
           <TextField id="login" label="Login" variant="standard" onChange={handleChangeLogin} value={data} />
           <TextField id="password" label="Password" variant="standard" type="password" onChange={handleChangePass} value={pass} />
           <Button disabled={isLoading || !data || !pass} onClick={handleLoginClick} variant="contained" >Войти</Button>
