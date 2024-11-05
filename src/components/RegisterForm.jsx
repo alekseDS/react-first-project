@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../lib/userSlice';
 
-function RegisterForm(props) {
+function RegisterForm() {
   const [data, setData] = useState('')
   const [pass, setPass] = useState('')
   const [isLoading, setIsLoading] = useState(false)
