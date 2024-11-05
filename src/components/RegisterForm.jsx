@@ -10,12 +10,15 @@ import axios from 'axios';
 import { NavLink } from "react-router-dom";
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../lib/userSlice';
 
 function RegisterForm(props) {
   const [data, setData] = useState('')
   const [pass, setPass] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
+  const dispatch = useDispatch()
 
   const handleChangeLogin = (e)=>{
     setData(e.target.value)
@@ -40,7 +43,8 @@ function RegisterForm(props) {
             })
   
             if(response.status === 200 && response.data.username){
-              props.setUser(response.data)
+              const setUserAction = setUser(response.data)
+              dispatch(setUserAction)
               enqueueSnackbar("Добро пожаловать, "+response.data.username, {
                   variant: "success"
               })
