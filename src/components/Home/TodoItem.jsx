@@ -5,12 +5,14 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Checkbox, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function TodoItem(props) {
     const todo = props.todo
     const [isEdit, setIsEdit] = useState(false)
     const [title, setTitle] = useState(todo.title || '')
     const [description, setDesc] = useState(todo.description || '')
+    const navigate = useNavigate()
 
     const toggleIsEdit = ()=>{
         setIsEdit(!isEdit)
@@ -48,7 +50,11 @@ function TodoItem(props) {
                 onChange={handChangeTitle} 
                 disabled={props.isLoading}
                 />
-                : <Typography gutterBottom>
+                : <Typography 
+                  gutterBottom 
+                  sx={{cursor: 'pointer'}}
+                  onClick={()=>{navigate(`todos/${todo._id}`)}}
+                >
                 {todo.title}
                 </Typography>
             }
