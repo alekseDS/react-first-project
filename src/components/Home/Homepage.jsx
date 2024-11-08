@@ -5,19 +5,22 @@ import AddTodo from './AddTodo';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import { CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../lib/userSlice';
+import { Navigate } from 'react-router-dom';
 
-
-function Homepage(props){
+function Homepage(){
     const [todos, setTodos] =useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
+    const user = useSelector(selectUser)
 
     const getTodos = async ()=>{
         try {
             setIsLoading(true)
             const response = await axios.get('https://todos-be.vercel.app/todos',{
                 headers: {
-                    "Authorization": `Bearer ${props.user.access_token}`
+                    "Authorization": `Bearer ${user?.access_token}`
                 }
             })
             setTodos(response.data)
@@ -38,7 +41,7 @@ function Homepage(props){
                description  
             },{
                 headers: {
-                    "Authorization": `Bearer ${props.user.access_token}`
+                    "Authorization": `Bearer ${user?.access_token}`
                 }
             })
             await getTodos()
@@ -56,7 +59,7 @@ function Homepage(props){
             setIsLoading(true)
             const response = await axios.delete('https://todos-be.vercel.app/todos/'+_id,{
                 headers: {
-                    "Authorization": `Bearer ${props.user.access_token}`
+                    "Authorization": `Bearer ${user?.access_token}`
                 }
             })
             await getTodos()
@@ -76,7 +79,7 @@ function Homepage(props){
                 completed: !todos.find(item=>item._id ===_id).completed
             },{
                 headers: {
-                    "Authorization": `Bearer ${props.user.access_token}`
+                    "Authorization": `Bearer ${user?.access_token}`
                 }
             })
             await getTodos()
@@ -97,7 +100,7 @@ function Homepage(props){
                 description,
             },{
                 headers: {
-                    "Authorization": `Bearer ${props.user.access_token}`
+                    "Authorization": `Bearer ${user?.access_token}`
                 }
             })
             await getTodos()
@@ -111,10 +114,14 @@ function Homepage(props){
     }
 
     useEffect(()=>{
-        if(props.user.access_token){
+        if(user?.access_token){
             getTodos()
         }
-    },[props.user.access_token])
+    },[user?.access_token])
+
+    if(!user){
+        return <Navigate to="/login" />
+    }
 
     if(isLoading){
         return <CircularProgress/>
@@ -122,7 +129,7 @@ function Homepage(props){
 
     return (
         <div>
-            <Typography>{props.user.username}</Typography>
+            <Typography>{user?.username}</Typography>
             <AddTodo addTodo={handleAddTodo} isLoading={isLoading}/>
             {todos.map((item)=>{
                 return (
