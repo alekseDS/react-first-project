@@ -8,7 +8,7 @@ function NotFound() {
     <Stack sx={{marginTop: "150px"}} alignItems="center">
         <CloseIcon color='secondary' sx={{width: "150px", height: "150px"}} />
         <Typography variant='h3'>Страница не найдена</Typography>
-        <NavLink to={"/login"}>Вернуться на главную</NavLink>
+        <NavLink to={"/"}>Вернуться на главную</NavLink>
     </Stack>
   )
 }

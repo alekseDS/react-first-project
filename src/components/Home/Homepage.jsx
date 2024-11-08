@@ -119,10 +119,6 @@ function Homepage(){
         }
     },[user?.access_token])
 
-    if(!user){
-        return <Navigate to="/login" />
-    }
-
     if(isLoading){
         return <CircularProgress/>
     }
