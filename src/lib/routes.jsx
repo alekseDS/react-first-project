@@ -7,6 +7,7 @@ import ErrorElement from "../components/ui/ErrorElement";
 import NotFound from "../components/ui/NotFound";
 import Redirector from "../components/utils/Redirector";
 import Profile from "../components/profile/Profile";
+import Todo, { todoLoader } from "../components/Home/Todo";
 
 export const router = createBrowserRouter([
     {
@@ -20,6 +21,11 @@ export const router = createBrowserRouter([
                     {
                         index: true,
                         element: <Homepage />
+                    },  
+                    {
+                        loader: todoLoader,
+                        path: '/todos/:id',
+                        element: <Todo/>
                     },  
                     {
                         path: '/profile',
