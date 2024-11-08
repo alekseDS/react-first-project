@@ -22,5 +22,3 @@ export const userSlice = createSlice({
 
 export const { logout, setUser } = userSlice.actions
 export const { selectUser } = userSlice.selectors
-
-export default userSlice.reducer

@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -19,6 +19,7 @@ function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleChangeLogin = (e)=>{
     setData(e.target.value)
@@ -48,6 +49,7 @@ function RegisterForm() {
               enqueueSnackbar("Добро пожаловать, "+response.data.username, {
                   variant: "success"
               })
+              navigate("/")
           } 
         } 
     }
