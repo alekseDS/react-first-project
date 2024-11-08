@@ -9,7 +9,7 @@ function ErrorElement() {
         <NotInterestedIcon color='error' sx={{width: "50px", height: "50px"}} />
         <Typography variant='h3'>Произошла ошибка</Typography>
         <Typography >Работаем над ее устранением</Typography>
-        <NavLink to={"/login"}>Вернуться на главную</NavLink>
+        <NavLink to={"/"}>Вернуться на главную</NavLink>
     </Stack>
   )
 }
