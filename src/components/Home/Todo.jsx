@@ -1,29 +1,56 @@
 import axios from 'axios'
-import React from 'react'
-import { store } from '../../lib/store'
-import { Stack, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { CircularProgress, Stack, Typography } from '@mui/material'
 import { ArrowBackIos, Tornado } from '@mui/icons-material'
-import { NavLink, useLoaderData } from 'react-router-dom'
-
-export async function todoLoader({params}) {
-    const id = params.id
-    const user = store.getState().userSlice.user
-
-    try {
-        const response = await axios.get('https://todos-be.vercel.app/todos/'+id,{
-            headers: {
-                "Authorization": `Bearer ${user?.access_token}`
-            }
-        })
-        return response.data
-
-    } catch (e) {
-        console.error(e)
-    }
-}
+import { NavLink, useParams } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../../lib/userSlice'
 
 function Todo() {
-    const todo = useLoaderData()
+    const [isLoading, setIsLoading] = useState(false)
+    const [todo, setTodo] = useState()
+    const user = useSelector(selectUser)
+    const {enqueueSnackbar} = useSnackbar
+    const {id} = useParams()
+
+    useEffect(()=>{
+        if(id){
+            setIsLoading(true)
+            axios.get('https://todos-be.vercel.app/todos/'+id,{
+                headers: {
+                    "Authorization": `Bearer ${user?.access_token}`
+                }
+            })
+            .then(response =>{
+                setTodo(response.data)
+            })
+            .catch((e)=>{
+                enqueueSnackbar(e.response?.data?.message || "ошибка сервера", {
+                    variant: 'error'
+                })
+            })
+            .finally(()=>{
+                setIsLoading(false)
+            })
+        }
+    },[id])
+
+    if(!id) {
+        return <div>
+            <Typography variant='h3'>
+                Такой айди не найден
+            </Typography>
+            <NavLink to={'/'}>
+                Домой
+            </NavLink>
+        </div>
+    }
+
+    if(isLoading) {
+        return <CircularProgress />
+    }
+
   return (
     <Stack>
         <Tornado />
