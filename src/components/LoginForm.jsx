@@ -40,6 +40,7 @@ function LoginForm() {
           if(response.status === 200 && response.data.username){
             const setUserAction = setUser(response.data)
             dispatch(setUserAction)
+            localStorage.setItem('token', response.data.access_token)
             enqueueSnackbar("Добро пожаловать, "+response.data.username, {
                 variant: "success"
             })
